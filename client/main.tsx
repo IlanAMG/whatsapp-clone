@@ -1,7 +1,17 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
-import App from '../imports/ui/App';
+import { Tracker } from 'meteor/tracker';
+
+import App from '../imports/ui/components/App';
+
 Meteor.startup(() => {
-  render(<App />, document.getElementById('react-target'));
+  Tracker.autorun(() => {
+    const userReady:boolean = Meteor.subscribe('users.all').ready();
+    if (userReady) {
+      render(<App />, document.getElementById('root'));
+    } else {
+      console.log('User not ready')
+    }
+  })
 });
