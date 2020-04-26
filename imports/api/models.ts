@@ -22,12 +22,11 @@ export interface Message {
     _id?: string;
     chatId?: string;
     content?: string;
-    // createAt?: number;
-    createAt?: Date;
+    createAt?: number;
     type?: MessageType;
     ownership?: string;
     senderId?: string;
-    read?: string; 
+    read?: boolean; 
 }
 
 export enum MessageType {

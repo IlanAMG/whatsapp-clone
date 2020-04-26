@@ -14,12 +14,10 @@ export const Login = (props:any):JSX.Element => {
             if (err) {
                 console.log('error login :', err)
             } else {
-                console.log('resultat', res)
                 Meteor.loginWithPassword(username, password, (err) => {
                     if (err) {
                         console.log('error connexion :', err)
                     } else {
-                        console.log('no err')
                         props.history.push('/chats');
                     }
                 })

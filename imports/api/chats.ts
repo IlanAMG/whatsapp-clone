@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import moment from 'moment';
 import { Chat } from './models';
 
 export const ChatsCollection = new Mongo.Collection<Chat>('Chats')
@@ -13,8 +12,7 @@ export const dummyChats:Chat[] = [
         participants: ['x7qHLdLQk87cH5mLz', 'ZW26b99oNDGnwczrC'],
         lastMessage: {
             content: 'Salut, ça va ?',
-            createAt: moment().toDate()
-            // createAt: Date.now()
+            createAt: Date.now()
         }
     },
     {  
@@ -24,8 +22,7 @@ export const dummyChats:Chat[] = [
         participants: ['Dx4rqG8MXyW6Zv3AL', 'x7qHLdLQk87cH5mLz'],
         lastMessage: {
             content: 'Yo, bien ?',
-            createAt: moment().toDate()
-            // createAt: Date.now()
+            createAt: Date.now()
         }
     },
     {  
@@ -35,8 +32,7 @@ export const dummyChats:Chat[] = [
         participants: ['S3fDHK5Soi66BSnRi', 'Dx4rqG8MXyW6Zv3AL'],
         lastMessage: {
             content: 'Bonjour !!',
-             createAt: moment().toDate()
-            //  createAt: Date.now()
+             createAt: Date.now()
         }
     }
 ]

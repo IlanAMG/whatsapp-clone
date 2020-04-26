@@ -1,6 +1,6 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
+import { Meteor } from 'meteor/meteor'
+import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash'
 
 import { Left } from './Left';
@@ -9,27 +9,44 @@ import StyledMain from '../elements/StyledMain';
 import { findChats } from '../../api/helpers';
 import { Chat } from '../../api/models';
 
-export const Main = (props:any):JSX.Element => {
+const Main = (props:any):JSX.Element => {
     const [messageVisible, setMessageVisible] = React.useState<boolean>(false)
     const [selectedChat, setSelectedChat] = React.useState<Chat>({})
-
-    Tracker.autorun(() => {
-        Meteor.subscribe('chats.mine');
-        console.log('chats', findChats())
-    })
 
     const handleChatClick = (_id:string):void => {
         if (!messageVisible) {
             setMessageVisible(true)
         }
-        const newChat:Chat = _.find(findChats(), {_id})
-        console.log(newChat)
+        const newChat:Chat = _.find(props.chats, {_id})
+        setSelectedChat(newChat)
     }
 
     return (
         <StyledMain>
-            <Left chats={findChats()} onChatClick={handleChatClick} />
-            <Right messageVisible={messageVisible} />
+            {
+                !props.loading ?
+                    <>
+                        <Left 
+                            chats={props.chats} 
+                            onChatClick={handleChatClick}
+                            selectedChat={selectedChat} 
+                        />
+                        <Right 
+                            messageVisible={messageVisible} 
+                            selectedChat={selectedChat}    
+                        />
+                    </>
+                : null
+            }
         </StyledMain>
     )
 }
+
+export default withTracker(() => {
+    const chatsReady:boolean = Meteor.subscribe('chats.mine').ready();
+    const messagesReady:boolean = Meteor.subscribe('messages.all').ready();
+    return {
+        loading: chatsReady && messagesReady ? false : true,
+        chats: findChats()
+    }
+})(Main);

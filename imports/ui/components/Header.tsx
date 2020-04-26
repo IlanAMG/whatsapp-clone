@@ -8,12 +8,13 @@ export const Header = (props:any):JSX.Element => {
     const { icons, iconClass } = props;
 
     const renderIcons = ():JSX.Element[] => {
-        return icons.map((icon:string, i:number)  => {
+        return icons.map((icon:any, i:number)  => {
             return (
                 <FontAwesome 
                     key={i}
                     className={iconClass}
-                    name={icon}
+                    name={icon.name}
+                    onClick={icon.func}
                 />
             )
         })
