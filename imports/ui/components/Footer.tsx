@@ -24,6 +24,26 @@ export const Footer = (props:any):JSX.Element => {
         setIconName('microphone')
     }
 
+    const handleEnter = React.useCallback(e => {
+        const { keyCode } = e;
+    
+        if (keyCode === 13 && inputValue) {
+            if (iconName === 'microphone') {
+                return
+            }
+            props.onSend(inputValue, MessageType.TEXT)
+            setInputValue('')
+            setIconName('microphone')
+        } 
+      }, [inputValue]);
+
+    React.useEffect(() => {
+        window.addEventListener('keydown', handleEnter);
+        return () => {
+          window.removeEventListener('keydown', handleEnter);
+        };
+      }, [handleEnter]);
+
     return (
         <StyledFooter>
             <FontAwesome
