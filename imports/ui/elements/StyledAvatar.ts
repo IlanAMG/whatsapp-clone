@@ -18,9 +18,40 @@ const StyledAvatar = styled.div`
         border-radius: 2.45rem;
     `}
 
+    ${props => props.big && css`
+        width: 20rem;
+        height: 20rem;
+        border-radius: 50%;
+    `}
+
     .avatar--img {
         width: 100%;
         height: 100%;
+    }
+
+    .avatar--overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: white;
+        font-size: 2.4rem;
+    }
+
+    .overlay--icon {
+        margin-bottom: 1.3rem;
+    }
+
+    .overlay--text {
+        font-size: 1.4rem;
+    }
+
+    input[type=file] {
+        display: none;
     }
 `
 

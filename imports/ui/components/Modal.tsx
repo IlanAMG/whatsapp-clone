@@ -2,6 +2,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome';
 
 import StyledModal from '../elements/StyledModal';
+import { MessageType } from '../../api/models';
 
 export const Modal = (props:any):JSX.Element => {
     const { selectedImage, onClose, onUpload } = props
@@ -23,7 +24,7 @@ export const Modal = (props:any):JSX.Element => {
                     alt='img'
                     src={selectedImage}
                 />
-                <div onClick={onUpload} className="modal--body__fab">
+                <div onClick={() => onUpload('', MessageType.IMAGE)} className="modal--body__fab">
                     <FontAwesome
                         name='paper-plane'
                         size='3x'

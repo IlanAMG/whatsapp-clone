@@ -2,6 +2,7 @@ import React from 'react'
 import FontAwesome from 'react-fontawesome';
 
 import StyledFooter from '../elements/StyledFooter';
+import { MessageType } from '../../api/models';
 
 export const Footer = (props:any):JSX.Element => {
 
@@ -18,7 +19,9 @@ export const Footer = (props:any):JSX.Element => {
         if (iconName === 'microphone') {
             return
         }
-        props.onSend(inputValue)
+        props.onSend(inputValue, MessageType.TEXT)
+        setInputValue('')
+        setIconName('microphone')
     }
 
     return (

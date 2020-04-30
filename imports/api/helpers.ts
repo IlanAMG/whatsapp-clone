@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
 
 import { User, Chat, Message } from './models'
 import { Accounts } from 'meteor/accounts-base'
@@ -46,11 +47,11 @@ export const findChats = ():Chat[] => {
         });
 }
 
-const findOtherUser = (_id:string) => {
+export const findOtherUser = (_id:string) => {
     return Meteor.users.findOne({_id})
 }
 
-const findOtherId = (participants: string[]):string => {
+export const findOtherId = (participants: string[]):string => {
     const myId:string = Meteor.userId()
     let otherId:string;
 
@@ -63,12 +64,17 @@ const findOtherId = (participants: string[]):string => {
 }
 
 const findLastMessage = (chatId:string):Message => {
-    return MessagesCollection.find({ chatId }, {
+    const message:Message[] = MessagesCollection.find({ chatId }, {
         sort: { createAt: -1 }
-    }).fetch()[0]
+    }).fetch()
+    if (!message[0]) {
+        return ChatsCollection.findOne(chatId).lastMessage
+    } else {
+        return message[0]
+    }
 }
 
-export const uploadFile = (file:any):void => {
+export const uploadFile = (file:any, isMessage:boolean):void => {
     const fileUpload = ImagesCollection.insert({
         file,
         streams: 'dynamic',
@@ -85,13 +91,24 @@ export const uploadFile = (file:any):void => {
             console.log('err upload', err)
         } else {
             const _id:string = fileObj._id;
-            Meteor.call('images.url', _id, (err, res) => {
-                if (err) {
-                    console.log('err url : ', err)
-                } else {
-                    console.log('url :', res)
-                }
-            })
+            if (isMessage) {
+                Meteor.call('images.url', _id, (err, url) => {
+                    if (err) {
+                        console.log('err url : ', err)
+                    } else {
+                        console.log('url :', url)
+                        Session.set('wwc__imageUrl', url)
+                    }
+                })
+            } else {
+                Meteor.call('user.picture', _id, (err, url) => {
+                    if (err) {
+                        console.log('err url : ', err)
+                    } else {
+                        console.log('url :', url)
+                    }
+                })
+            }
         }
     })
 
@@ -104,4 +121,22 @@ export const uploadFile = (file:any):void => {
     })
     
     fileUpload.start()
+}
+
+export const getBadges = (chatId:string):number => {
+    const participants:string[] = ChatsCollection.findOne(chatId).participants
+    const otherId:string = findOtherId(participants)
+    const badges:number = MessagesCollection.find({chatId, senderId: otherId, read: false}).count()
+    return badges
+}
+
+export const updateBadges = (participants:string[], chatId:string):void => {
+    const otherId:string = findOtherId(participants);
+    Meteor.call('message.update.badges', chatId, otherId, (err, res) => {
+        if (err) {
+            console.log('err :', err)
+        } else {
+            console.log('res : ', res)
+        }
+    })
 }

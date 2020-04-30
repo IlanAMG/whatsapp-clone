@@ -9,6 +9,8 @@ import FlipMove from 'react-flip-move'
 import StyledMessageBox from '../elements/StyledMessageBox';
 import { MessageText } from './MessageText';
 import { FABs } from './FABs';
+import MessageImage from './MessageImage';
+import { updateBadges } from '../../api/helpers';
 
 export const MessageBox = (props:any):JSX.Element => {
     const { messages, selectedChat, fabVisible, onFABInputClick, onInputChange } = props
@@ -43,9 +45,23 @@ export const MessageBox = (props:any):JSX.Element => {
 
     const renderMessages = (newMessage:any):JSX.Element[] => {
         return newMessage.groupedMessages.map(message => {
+            if (message.type === 'image') {
+                const mine:boolean = message.ownership ==='mine';
+                return (
+                    <MessageImage
+                        key={message._id}
+                        content={message.content}
+                        createAt={message.createAt}
+                        mine={mine}
+                        onImgClick={() => props.onMsgClick(message._id, 'image')}
+                    />
+                )
+            }
             return (
-                <MessageText 
+                <MessageText
+                    onClick={props.onMsgClick}
                     key={message._id}
+                    id={message._id}
                     createAt={message.createAt}
                     msgClass={`message message--${message.ownership}`}  
                     content={message.content}
@@ -72,6 +88,7 @@ export const MessageBox = (props:any):JSX.Element => {
     }
 
     React.useEffect(() => {
+        updateBadges(selectedChat.participants, selectedChat._id)
         scrollToBottom()
     }, [selectedChat, messages])
 

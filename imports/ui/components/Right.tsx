@@ -7,15 +7,19 @@ import MessageView from './MessageView';
 
 export const Right = (props:any):JSX.Element => {
 
-    const { messageVisible, selectedChat } = props
+    const { messageVisible, selectedChat, onAvatarClick, otherProfileVisible, onMsgClick } = props
 
     const messageText = "Whatsapp se connecte à votre téléphone pour synchroniser les messages. Pour réduire l'utilisation des données, connectez votre téléphone à un réseau Wifi."
 
     return (
-        <StyledRight>
+        <StyledRight otherProfileVisible={otherProfileVisible}>
             {
             messageVisible ? 
-                <MessageView selectedChat={selectedChat} />
+                <MessageView 
+                    onAvatarClick={onAvatarClick} 
+                    selectedChat={selectedChat} 
+                    onMsgClick={onMsgClick}
+                />
             :
             <RightImg right={true} messageText={messageText} />   
             }

@@ -28,7 +28,7 @@ const StyledHeader = styled.div`
     }
     .headerMsg--container {
         text-align: left;
-        width: 57rem;
+        width: 70%;
         height: 4.5rem;
         display: flex;
         flex-direction: column;
